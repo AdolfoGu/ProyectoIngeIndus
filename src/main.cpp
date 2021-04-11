@@ -1,6 +1,20 @@
 #include <Arduino.h>
+#include <LiquidCrystal.h>
 #define btnIN A0 //Entrada analogica
 #define LED 10   //Salida digital
+
+/////////////////variables menu////////////
+int menuLCD;
+int salida;
+int fotocelda;
+String AnuncioMenu;
+
+void Estado();
+void Anuncio();
+void Menu();
+ 
+LiquidCrystal lcd(12,11,5,4,3,2);
+/////////////////////////////////////////
 
 enum funMode
 {
@@ -32,6 +46,12 @@ void setup()
 {
   pinMode(btnIN, INPUT_PULLUP);
   pinMode(LED, OUTPUT);
+
+  ///////////MENU/////////
+  pinMode(13, OUTPUT); //Led como salida
+  pinMode(6,OUTPUT); //Buzzer como salida
+  lcd.begin(16,2); //confiramos el tamaño de la LDC
+  digitalWrite(15,HIGH) //Resistencia PullUp al pulsador
 }
 
 void loop()
@@ -39,6 +59,11 @@ void loop()
   func1(); //Button detection
   func2(); //Menu de seleccion
   fade();
+
+  //////////MENU//////////////
+  menu = analogRead (0); //Guardamos la posicion de potenciometro
+  menu = map(menu,0,1023,0,3) //escalamos el valor para que sea Menu
+  
 }
 /////////////////////////////////////////////
 void func1()
@@ -122,7 +147,6 @@ void funcB4(int interB) {
   }
 
 }
-
 
 void fade(){
     tiempo = millis ();
